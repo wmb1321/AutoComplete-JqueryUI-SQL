@@ -1,0 +1,8 @@
+1. Add special markers to delimit splits.
+2. Split on said markers into an array.
+3. Remove the value that is being evaluated for autocomplete. (Initially, for phase 1 this will be the last item in the array.)
+4. Push the value from ui.item.value onto the array. (The value in ui.item.value is the suggested item from the jquery autocomplete method)
+5. Join the whole mess back into one object.
+6. Remove special markers and replace with appropriate delimiters. (ie nbsp, line wrap, comma, etc)
+7. ?????
+8. Profit!

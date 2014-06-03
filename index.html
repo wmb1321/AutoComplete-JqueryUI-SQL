@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>jQuery UI Example Page</title>
+	<link href="css/vader/jquery-ui-1.10.4.custom.css" rel="stylesheet">
+	<script src="js/jquery-1.10.2.js"></script>
+	<script src="js/jquery-ui-1.10.4.custom.js"></script>
+ <script>
+	$(function() {
+		var charMarker = 0;
+		var availableTags = [
+			"SELECT",
+			"tblEmployee",
+			"tblJob",
+			"tblBosses",
+			"tblOrders",
+			"Company",
+			"Invoice",
+			"WHERE", 
+			"FROM",
+			"IN"
+		];
+		
+		function split( val ) {
+			return val.split(  /,\s*|\.|\s/ ); 
+		}
+		
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
+		
+		$( "#tags" )
+		  // don't navigate away from the field on tab when selecting an item
+			.bind( "keydown", function( event ) {
+				if ( (event.keyCode === $.ui.keyCode.TAB || event.keyCode === $.ui.keyCode.ENTER) && $( this ).data( "ui-autocomplete" ).menu.active ) {
+				event.preventDefault();
+				}
+			})
+			  
+			.autocomplete({
+				
+				minLength: 3,
+				
+				source: function( request, response ) {
+				// delegate back to autocomplete, but extract the last term
+				response( $.ui.autocomplete.filter(
+				availableTags, extractLast( request.term ) ) );
+				},
+				
+				focus: function() {
+				// prevent value inserted on focus
+				return false;
+				},
+				
+				select: function( event, ui ) {
+				
+					// add markers before special char
+					this.value=this.value.replace(/\, /gi, '~c~,');
+					this.value=this.value.replace(/\s/gi, '~s~ ');
+					this.value=this.value.replace(/\./gi, "~p~.");
+					//this.value=this.value.replace(/\n/,"~n~ ");
+					// split on special char
+					var terms = split( this.value );
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push( ui.item.value );
+					terms.push("");
+					// join the whole mess
+					this.value = terms.join("");
+					
+					// remove and replace markers with special char 
+					this.value=this.value.replace("~c~", ", ");
+					this.value=this.value.replace("~s~", " ");
+					this.value=this.value.replace("~p~", ".");
+				return false;
+				}
+			});
+		});
+  </script>
+
+</head>
+<body>
+ 
+<div class="ui-widget">
+  <label for="tags"> </label>
+  <textarea id ="tags" rows="10" col="50"></textarea>
+  
+</div>
+ 
+</body>
+</html>
